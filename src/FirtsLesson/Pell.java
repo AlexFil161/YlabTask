@@ -1,3 +1,5 @@
+package FirtsLesson;
+
 import java.util.Scanner;
 
 public class Pell {
