@@ -90,6 +90,7 @@ public class Sorter {
                 bufferedWriter.newLine();
             }
             bufferedWriter.flush();
+            mergedFile.deleteOnExit();
         }
         return mergedFile;
     }
