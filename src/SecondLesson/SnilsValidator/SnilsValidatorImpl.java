@@ -6,7 +6,9 @@ public class SnilsValidatorImpl implements SnilsValidator {
     @Override
     public boolean validate(String snils) {
         Pattern pattern = Pattern.compile("[0-9]{11}");
-        if (Pattern.matches(String.valueOf(pattern), snils)) {
+        if (!Pattern.matches(String.valueOf(pattern), snils)) {
+            return false;
+        } else {
             char[] numbers = snils.toCharArray();
             int sum = 0;
             int coefficient = 9;
@@ -32,12 +34,7 @@ public class SnilsValidatorImpl implements SnilsValidator {
             }
 
 
-            if (controlNumber == snilsControlNumber) {
-                return true;
-            } else {
-                return false;
-            }
+            return controlNumber == snilsControlNumber;
         }
-        return false;
     }
 }
