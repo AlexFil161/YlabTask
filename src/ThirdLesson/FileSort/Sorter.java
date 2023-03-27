@@ -1,6 +1,8 @@
 package ThirdLesson.FileSort;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,11 +27,8 @@ public class Sorter {
         }
 
         File outputFile = new File(dataFile.getParent(), "sorted_" + dataFile.getName());
-        if (mergeFiles(sortedFiles).renameTo(outputFile)) {
-            return outputFile;
-        }
-
-        return null;
+        Files.move(mergeFiles(sortedFiles).toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        return outputFile;
     }
 
     private File sortElements(List<Long> elements) throws IOException {
