@@ -13,30 +13,13 @@ public class OrgStructureParserImpl implements OrgStructureParser {
         Map<Long, Employee> employees = new HashMap<>();
         try (FileReader fileInput = new FileReader(csvFile);
              BufferedReader bufferedReader = new BufferedReader(fileInput)) {
+            bufferedReader.readLine();
             while (bufferedReader.ready()) {
                 String line = bufferedReader.readLine();
                 String[] lineInfo = line.split(";");
 
-                Employee employee = new Employee();
-
-                employee.setId(Long.parseLong(lineInfo[0]));
-                if (lineInfo[1].equals("")) {
-                    employee.setBossId(null);
-                } else {
-                    employee.setBossId(Long.parseLong(lineInfo[1]));
-                }
-                employee.setName(lineInfo[2]);
-                employee.setPosition(lineInfo[3]);
+                Employee employee = createEmployee(lineInfo, employees);
                 employees.put(employee.getId(), employee);
-            }
-
-            for (Employee employee : employees.values()) {
-                Long bossId = employee.getBossId();
-                if (bossId != null) {
-                    Employee boss = employees.get(bossId);
-                    employee.setBoss(boss);
-                    boss.getSubordinate().add(employee);
-                }
             }
 
             for (Employee employee : employees.values()) {
@@ -46,5 +29,27 @@ public class OrgStructureParserImpl implements OrgStructureParser {
             }
         }
         return null;
+    }
+
+    private Employee createEmployee(String[] lineInfo, Map<Long, Employee> employees) {
+        Employee employee = new Employee();
+        employee.setId(Long.parseLong(lineInfo[0]));
+        if (lineInfo[1].equals("")) {
+            employee.setBossId(null);
+        } else {
+            employee.setBossId(Long.parseLong(lineInfo[1]));
+        }
+        employee.setName(lineInfo[2]);
+        employee.setPosition(lineInfo[3]);
+
+        for (Employee worker : employees.values()) {
+            Long bossId = worker.getBossId();
+            if (bossId != null) {
+                Employee boss = employees.get(bossId);
+                worker.setBoss(boss);
+                boss.getSubordinate().add(worker);
+            }
+        }
+        return employee;
     }
 }
